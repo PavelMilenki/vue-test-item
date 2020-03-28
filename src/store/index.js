@@ -1,12 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import {api} from "../api/api";
 
 Vue.use(Vuex);
-
-const instance = axios.create({
-    baseURL: "http://www.nbrb.by/api/exrates/",
-});
 
 export default new Vuex.Store({
     state: {
@@ -23,8 +19,7 @@ export default new Vuex.Store({
     actions: {
         async fetchCurrency({commit}) {
             try {
-                const res = await instance.get(`rates?periodicity=0`);
-                return res.data;
+                return await api.getAllCurrency();
             } catch (e) {
                 commit('setError', e);
                 throw e
@@ -32,8 +27,7 @@ export default new Vuex.Store({
         },
         async updateCurrency({commit}, {id, date}) {
             try {
-                const res = await instance.get(`rates/${id}?ondate=${date}`);
-                return res.data;
+                return await api.getCurrentCurrency(id, date);
             } catch (e) {
                 commit('setError', e);
                 throw e

@@ -4,6 +4,10 @@ import axios from 'axios'
 
 Vue.use(Vuex);
 
+const instance = axios.create({
+    baseURL: "http://www.nbrb.by/api/exrates/",
+});
+
 export default new Vuex.Store({
     state: {
         error: null
@@ -19,7 +23,7 @@ export default new Vuex.Store({
     actions: {
         async fetchCurrency({commit}) {
             try {
-                const res = await axios.get(`http://www.nbrb.by/api/exrates/rates?periodicity=0`);
+                const res = await instance.get(`rates?periodicity=0`);
                 return res.data;
             } catch (e) {
                 commit('setError', e);
@@ -28,7 +32,7 @@ export default new Vuex.Store({
         },
         async updateCurrency({commit}, {id, date}) {
             try {
-                const res = await axios.get(`http://www.nbrb.by/api/exrates/rates/${id}?ondate=${date}`);
+                const res = await instance.get(`rates/${id}?ondate=${date}`);
                 return res.data;
             } catch (e) {
                 commit('setError', e);
